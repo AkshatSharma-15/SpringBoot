@@ -39,4 +39,6 @@ public class UserController {
         emailService.sendEmail(message.getTo(), message.getSubject(), message.getBody());
         return "Mail sent";
     }
+
+    //UC12 --> Added Swagger Config to use Swagger at url(/swagger)
 }
