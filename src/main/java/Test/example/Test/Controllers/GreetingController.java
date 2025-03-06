@@ -1,7 +1,7 @@
 package Test.example.Test.Controllers;
 
 import Test.example.Test.dto.MessageDTO;
-import Test.example.Test.Services.GreetingService;
+import Test.example.Test.repositories.GreetingRepository;
 import Test.example.Test.Services.GreetingService;
 import jakarta.websocket.server.PathParam;
 import org.springframework.web.bind.annotation.*;
@@ -54,5 +54,13 @@ public class GreetingController {
     @PostMapping("/save")
     public MessageDTO save(@RequestBody MessageDTO message){
         return greetingService.saveMessage(message);
+    }
+
+    // UC-5
+    @GetMapping("/find/{id}")
+    public MessageDTO findById(@PathVariable Long id){
+
+        return greetingService.findById(id);
+
     }
 }
