@@ -2,6 +2,7 @@ package Test.example.Test.Controllers;
 
 
 import Test.example.Test.dto.LoginDTO;
+import Test.example.Test.dto.MailDTO;
 import Test.example.Test.dto.MessageDTO;
 import Test.example.Test.dto.AuthUserDTO;
 import Test.example.Test.Services.AuthenticationService;
@@ -30,5 +31,12 @@ public class UserController {
     @PostMapping(path ="/login")
     public String login(@RequestBody LoginDTO user){
         return authenticationService.login(user);
+    }
+
+    //UC11 --> For sending mail to another person
+    @PostMapping(path = "/sendMail")
+    public String sendMail(@RequestBody MailDTO message){
+        emailService.sendEmail(message.getTo(), message.getSubject(), message.getBody());
+        return "Mail sent";
     }
 }
