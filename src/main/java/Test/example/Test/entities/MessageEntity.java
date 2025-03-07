@@ -10,7 +10,7 @@ public class MessageEntity {
     String message;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     public MessageEntity(){

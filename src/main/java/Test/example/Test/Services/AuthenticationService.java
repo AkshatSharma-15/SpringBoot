@@ -1,27 +1,27 @@
 package Test.example.Test.Services;
 
 import Test.example.Test.dto.AuthUserDTO;
+import Test.example.Test.dto.LoginDTO;
+import Test.example.Test.dto.PassDTO;
+import Test.example.Test.interfaces.IAuthInterface;
 import Test.example.Test.modals.AuthUser;
 import Test.example.Test.repositories.UserRepository;
-import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import Test.example.Test.dto.LoginDTO;
-import Test.example.Test.Services.JwtTokenService;
-import Test.example.Test.Services.EmailService;
-
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class AuthenticationService {
-    UserRepository userRepository;
+    private final UserRepository userRepository;
     EmailService emailService;
     JwtTokenService jwtTokenService;
 
-    public AuthenticationService(UserRepository userRepository, EmailService emailService) {
+    public AuthenticationService(UserRepository userRepository, EmailService emailService, JwtTokenService jwtTokenService) {
         this.userRepository = userRepository;
         this.emailService = emailService;
+        this.jwtTokenService = jwtTokenService;
     }
 
     public String register(AuthUserDTO user){
@@ -46,10 +46,11 @@ public class AuthenticationService {
         userRepository.save(newUser);
 
         //sending the confirmation mail to the user
-        emailService.sendEmail(user.getEmail(), "Regitration Status", user.getFirstName()+" you are registered!");
+        emailService.sendEmail(user.getEmail(), "Your Account is Ready!", "UserName : "+user.getFirstName()+" "+user.getLastName()+"\nEmail : "+user.getEmail()+"\nYou are registered!\nBest Regards,\nBridgelabz Team");
 
         return "user registered";
     }
+
 
     public String login(LoginDTO user){
 
@@ -75,5 +76,27 @@ public class AuthenticationService {
         userRepository.save(foundUser);
 
         return "user logged in"+"\ntoken : "+token;
+    }
+
+    public AuthUserDTO forgotPassword(PassDTO pass, String email){
+
+        AuthUser foundUser = userRepository.findByEmail(email);
+
+        if(foundUser == null)
+            throw new RuntimeException("user not registered!");
+
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        String hashpass = bCryptPasswordEncoder.encode(pass.getPassword());
+
+        foundUser.setPassword(pass.getPassword());
+        foundUser.setHashPass(hashpass);
+
+        userRepository.save(foundUser);
+
+        emailService.sendEmail(email, "Password Reset Status", "Your password has been reset");
+
+        AuthUserDTO resDto = new AuthUserDTO(foundUser.getFirstName(), foundUser.getLastName(), foundUser.getEmail(), foundUser.getPassword(), foundUser.getId() );
+
+        return resDto;
     }
 }

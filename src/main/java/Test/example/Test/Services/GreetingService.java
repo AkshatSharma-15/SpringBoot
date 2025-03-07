@@ -1,8 +1,8 @@
 package Test.example.Test.Services;
 
-import Test.example.Test.Services.GreetingService;
 import Test.example.Test.dto.MessageDTO;
 import Test.example.Test.entities.MessageEntity;
+import Test.example.Test.interfaces.IGreetingInterface;
 import Test.example.Test.repositories.GreetingRepository;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class GreetingService {
+public class GreetingService implements IGreetingInterface {
     String message;
     GreetingRepository greetingRepository;
 
@@ -18,6 +18,7 @@ public class GreetingService {
         this.greetingRepository = greetingRepository;
         message = "Hello World!";
     }
+
 
     public String getGreetings(){
         return this.message;
