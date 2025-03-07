@@ -1,36 +1,31 @@
 package Test.example.Test.Controllers;
 
 
-import Test.example.Test.dto.LoginDTO;
-import Test.example.Test.dto.MailDTO;
-import Test.example.Test.dto.MessageDTO;
-import Test.example.Test.dto.AuthUserDTO;
-import Test.example.Test.Services.AuthenticationService;
+import Test.example.Test.dto.*;
+import Test.example.Test.interfaces.IAuthInterface;
 import Test.example.Test.Services.EmailService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserController {
+    @Autowired
     EmailService emailService;
-    AuthenticationService authenticationService;
 
-    public UserController(EmailService emailService, AuthenticationService authenticationService) {
-        this.emailService = emailService;
-        this.authenticationService = authenticationService;
-    }
+    @Autowired
+    IAuthInterface iAuthInterface;
 
     //UC9 --> For Registration of a user
     @PostMapping(path = "/register")
     public String register(@RequestBody AuthUserDTO user){
-        return authenticationService.register(user);
+        return iAuthInterface.register(user);
     }
 
     //UC10 --> For User Login
     @PostMapping(path ="/login")
     public String login(@RequestBody LoginDTO user){
-        return authenticationService.login(user);
+        return iAuthInterface.login(user);
     }
 
     //UC11 --> For sending mail to another person
@@ -41,4 +36,16 @@ public class UserController {
     }
 
     //UC12 --> Added Swagger Config to use Swagger at url(/swagger)
+
+    //UC13 --> Added forgot password functionality
+    @PutMapping("/forgotPassword/{email}")
+    public AuthUserDTO forgotPassword(@RequestBody PassDTO pass, @PathVariable String email){
+        return iAuthInterface.forgotPassword(pass, email);
+    }
+
+    //UC14 --> Added reset password functionality
+    @PutMapping("/resetPassword/{email}")
+    public String resetPassword(@PathVariable String email ,@RequestParam String currentPass, @RequestParam String newPass){
+        return iAuthInterface.resetPassword(email, currentPass, newPass);
+    }
 }
