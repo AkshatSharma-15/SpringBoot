@@ -13,7 +13,7 @@ public class JwtTokenService {
     private static final String TOKEN_SECRET = "Lock";
 
 
-    public String createToken(Long id) {
+    public String createToken(Long id)   {
         try {
             Algorithm algorithm = Algorithm.HMAC256(TOKEN_SECRET);
 
@@ -29,7 +29,6 @@ public class JwtTokenService {
         }
         return null;
     }
-
     public Long decodeToken(String token) {
         try {
             JWTVerifier verifier = JWT.require(Algorithm.HMAC256(TOKEN_SECRET)).build();

@@ -1,5 +1,15 @@
 package Test.example.Test.dto;
 
+import jakarta.persistence.Access;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class MessageDTO {
     String message;
 
@@ -8,21 +18,5 @@ public class MessageDTO {
     public MessageDTO(String message) {
         this.message = message;
         this.id = null;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 }

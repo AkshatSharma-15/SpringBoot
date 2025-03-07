@@ -1,9 +1,11 @@
 package Test.example.Test.Controllers;
 
 import Test.example.Test.dto.MessageDTO;
+import Test.example.Test.interfaces.IGreetingInterface;
 import Test.example.Test.repositories.GreetingRepository;
-import Test.example.Test.Services.GreetingService;
+import Test.example.Test.interfaces.IGreetingInterface;
 import jakarta.websocket.server.PathParam;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,14 +13,12 @@ import java.util.List;
 @RestController
 @RequestMapping("greetings")
 public class GreetingController {
-    GreetingService greetingService;
+    @Autowired
+    IGreetingInterface iGreetingInterface;
 
-    public GreetingController(GreetingService greetingService) {
-        this.greetingService = greetingService;
-    }
-
-    // UC-1
+    //UC1
     @GetMapping("/get")
+//        @RequestMapping
     public String getGreetings(){
         return "{\"message\": \"Hello from GET Request!\"}";
     }
@@ -33,15 +33,16 @@ public class GreetingController {
         return "{\""+message+": \"Hello from PUT Request!\"}";
     }
 
-    // UC-2
+    //UC2
     @GetMapping("/service")
     public String serviceGreetings(){
-        return greetingService.getGreetings();
+        return iGreetingInterface .getGreetings();
     }
 
-    // UC-3
+    //UC3
     @GetMapping("/query")
     public String query(@PathParam("firstName") String firstName, @PathParam("lastName") String lastName){
+
         if(firstName != null && lastName != null)
             return "Hello "+firstName+" "+lastName+" Welcome to Bridgelabz";
         else if(firstName != null)
@@ -52,35 +53,35 @@ public class GreetingController {
             return "Hello, Welcome to Bridgelabz";
     }
 
-    // UC-4
+    //UC4
     @PostMapping("/save")
     public MessageDTO save(@RequestBody MessageDTO message){
-        return greetingService.saveMessage(message);
+        return iGreetingInterface .saveMessage(message);
     }
 
-    // UC-5
+    //UC5
     @GetMapping("/find/{id}")
     public MessageDTO findById(@PathVariable Long id){
 
-        return greetingService.findById(id);
+        return iGreetingInterface .findById(id);
 
     }
 
     //UC6
     @GetMapping("/listAll")
     public List<MessageDTO> listAll(){
-        return greetingService.listAll();
+        return iGreetingInterface .listAll();
     }
 
     //UC7
     @PostMapping("/edit/{id}")
     public MessageDTO editById(@RequestBody MessageDTO message, @PathVariable Long id){
-        return greetingService.editById(message, id);
+        return iGreetingInterface .editById(message, id);
     }
 
     //UC8
     @DeleteMapping("/delete/{id}")
     public String delete(@PathVariable Long id){
-        return greetingService.delete(id);
+        return iGreetingInterface .delete(id);
     }
 }
